@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: required-nodeAffinity-pod-or
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:           #硬亲和
+        nodeSelectorTerms:
+        - matchExpressions:               #matchExpressions级别是或关系（or）
+          - {key: zone, operator: In, values: ["foo"]}   我们是(and)与关系，需要都满足
+          - {key: zone, operator: In, values: ["bar"]}   我们是(and)与关系，需要都满足
+        - matchExpressions:               #matchExpressions级别是或关系（or）
+          - {key: ssd, operator: Exists, values: []}
+  containers:
+  - name: myapp
+    image: nginx
+    resources:
+      requests:
+        cpu: 6
+        memory: 20Gi
