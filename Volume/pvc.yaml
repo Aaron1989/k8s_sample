@@ -1,0 +1,9 @@
+metadata:
+  name: nfs-pvc
+  namespace: pv-test
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 90Mi
