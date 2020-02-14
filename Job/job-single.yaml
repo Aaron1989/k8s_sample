@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-demo
+spec:
+  template:
+    metadata:
+      labels:
+        app: myjob
+    spec:
+      containers:
+      - name: myjob
+        image: alphine
+        command: ["/bin/sh", "-c", "sleep 10"]
+      restartPolicy: Never                     #重启策略-never，就算失败，也不重启

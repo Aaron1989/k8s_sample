@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-demo
+spec:
+  completions: 5       #任务总量
+  parallelism: 2       #并发量
+  template:
+    metadata:
+      labels:
+        app: myjob
+    spec:
+      containers:
+      - name: myjob
+        image: nginx
+        command: ["/bin/sh", "-c", "sleep 10"]
+      restartPolicy: Never                      #重启策略-never，就算失败，也不重启

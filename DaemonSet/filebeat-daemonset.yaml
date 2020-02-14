@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat-ds
+  labels:
+    app: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image:  prima/filebeat:6.4.2
+        env:
+        - name: REDIS_HOST
+          value: test.com:6379
+        - name: LOG_LEVEL
+          value: info
+      nodeSelector:                       #节点选择器
+        logcollecting: "on"               #自定义标签
