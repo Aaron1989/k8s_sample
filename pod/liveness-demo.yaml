@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: c
+spec:
+  containers:
+  - name: liveness-demo
+    image: nginx:1.12-alpine
+    ports:
+    - name: http
+      containerPort: 80
+    lifecycle:
+      postStart:
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - 'echo Healty > /usr/share/nginx/html/healthz'
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: http     #上面定义的变量，值为80
+        scheme: HTTP
+      periodSeconds: 2       #检测频率，2秒检查1次
+      failureThreshold: 2     #检查失败次数，2次失败才认为失败
+      initialDelaySeconds: 3     #延迟检查时间，如tomcat初始化需要有一定时间，就需要用到这个参数
+      timeoutSeconds: 2           #超时时间为2秒
