@@ -1,0 +1,7 @@
+apiVersion: stable.example.com/v1      #定义规范：  <group>/<version>
+kind: CronTab
+metadata:
+  name: tony
+  namespace: default
+spec:
+  userID: 999999

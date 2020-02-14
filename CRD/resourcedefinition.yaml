@@ -1,0 +1,22 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # 名称必须符合下面的格式：<plural>.<group>
+  name: crontabs.stable.example.com
+spec:
+  # REST API使用的组名称：/apis/<group>/<version>
+  group: stable.example.com
+  # REST API使用的版本号：/apis/<group>/<version>
+  version: v1
+  # 定义哪个级别的资源类型：Namespaced或Cluster
+  scope: Namespaced
+  names:
+    # URL中使用的复数名称: /apis/<group>/<version>/<plural>
+    plural: crontabs
+    # CLI中使用的单数名称
+    singular: crontab
+    # CamelCased格式的单数类型。在清单文件中使用
+    kind: CronTab
+    # CLI中使用的资源简称
+    shortNames:
+    - ct

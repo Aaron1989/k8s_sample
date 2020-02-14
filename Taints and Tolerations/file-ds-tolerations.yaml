@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat-ds
+  labels:
+    app: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      containers:
+      - name: filebeat
+        image:  prima/filebeat:6.4.2
+        env:
+        - name: REDIS_HOST
+          value: test.db:6379
+        - name: LOG_LEVEL
+          value: info
+      tolerations:
+      - key: "department"
+        operator: "Equal"
+        value: "ops"
+        effect: "NoSchedule"

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-with-pod-affinity
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      name: myapp
+      labels:
+        app: myapp
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:      #硬亲和，表示希望调度到有app<in>ngx-new标签的pod的节点上，并且颗粒度是zone
+          - labelSelector:
+              matchExpressions:
+              - {key: app, operator: In, values: ["ngx-new"]}
+            topologyKey: zone
+      containers:
+      - name: myapp
+        image: nginx
