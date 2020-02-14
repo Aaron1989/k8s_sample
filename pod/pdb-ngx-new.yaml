@@ -1,0 +1,9 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: ngx-new
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: ngx-new
