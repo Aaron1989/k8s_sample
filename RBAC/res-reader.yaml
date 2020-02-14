@@ -1,0 +1,9 @@
+kind: Role             #名称空间权限
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default         #只能读取default名称空间下的对应规则
+  name: res-reader
+rules:
+- apiGroups: [""]   # "" 表示核心群组：core API group
+  resources: ["pods", "pods/log", "services"]
+  verbs: ["get", "list", "watch"]

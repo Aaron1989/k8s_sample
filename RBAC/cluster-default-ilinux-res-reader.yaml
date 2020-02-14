@@ -1,0 +1,13 @@
+kind: RoleBinding                 #名称空间级别权限绑定;ClusterRoleBinding为集群级别的权限绑定
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-default-ilinux-res-reader                   #增加可读性，命名规则：<用户>-<权限>
+  namespace: default
+subjects:
+- kind: User
+  name: ilinux
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-res-reader
+  apiGroup: rbac.authorization.k8s.io
