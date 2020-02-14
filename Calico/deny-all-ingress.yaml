@@ -1,0 +1,11 @@
+piVersion: networking.k8s.io/v1             #dev名称空间下的所有pod，不允许相互访问也不允许被外部访问
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: dev
+spec:
+  podSelector: {}                         #没指定 就是该名称空间下所有的Pod
+#  ingress:                              #补充:注释的这两行表示放行所有入站流量
+#  - {}
+  policyTypes:
+  - Ingress                               #只控制入站流量，没具体定义，就表示一个都不放行
