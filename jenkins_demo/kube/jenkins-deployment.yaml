@@ -13,55 +13,39 @@ spec:
       labels:
         app: jenkins
     spec:
-      terminationGracePeriodSeconds: 10
       serviceAccountName: jenkins
       containers:
       - name: jenkins
         image: jenkins/jenkins:lts
-        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 0       #设置以ROOT用户运行容器
+          privileged: true   #拥有特权
         ports:
-        - containerPort: 8080
-          name: web
-          protocol: TCP
-        - containerPort: 50000
-          name: agent
-          protocol: TCP
+        - name: http
+          containerPort: 8080
+        - name: jnlp
+          containerPort: 50000
         resources:
           limits:
-            cpu: 2000m
-            memory: 1Gi
+            memory: 2Gi
+            cpu: "1200m"
           requests:
-            cpu: 1000m
             memory: 1Gi
-        livenessProbe:
-          httpGet:
-            path: /login
-            port: 8080
-          initialDelaySeconds: 60
-          timeoutSeconds: 5
-          failureThreshold: 12
-        readinessProbe:
-          httpGet:
-            path: /login
-            port: 8080
-          initialDelaySeconds: 60
-          timeoutSeconds: 5
-          failureThreshold: 12
-        volumeMounts:
-        - name: jenkinshome
-          subPath: jenkins
-          mountPath: /var/jenkins_home
+            cpu: "1000m"
         env:
-        - name: LIMITS_MEMORY
-          valueFrom:
-            resourceFieldRef:
-              resource: limits.memory
-              divisor: 1Mi
-        - name: JAVA_OPTS
-          value: -Xmx$(LIMITS_MEMORY)m -XshowSettings:vm -Dhudson.slaves.NodeProvisioner.initialDelay=0 -Dhudson.slaves.NodeProvisioner.MARGIN=50 -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85 -Duser.timezone=Asia/Shanghai
-      securityContext:
-        fsGroup: 1000
+        - name: "JAVA_OPTS"  #设置变量，指定时区和 jenkins slave 执行者设置
+          value: "
+                   -Duser.timezone=Asia/Shanghai
+                   -Dhudson.slaves.NodeProvisioner.initialDelay=0
+                   -Dhudson.slaves.NodeProvisioner.MARGIN=50
+                   -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
+                 "
+        - name: "JENKINS_OPTS"
+          value: "--prefix=/jenkins"         #设置路径前缀加上 Jenkins
+        volumeMounts:                        #设置要挂在的目录
+        - name: data
+          mountPath: /var/jenkins_home
       volumes:
-      - name: jenkinshome
+      - name: data
         persistentVolumeClaim:
-          claimName: jenkins-pvc
+          claimName: jenkins-pvc      #设置PVC
