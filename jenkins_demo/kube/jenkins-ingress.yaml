@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  namespace: jenkins-kube-test
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"            #当有多种ingress-controller的时候，用这个参数区分使用哪个controller
+spec:
+  rules:
+  - host: <domain>                        #自行修改
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins
+          servicePort: <NodePort>         #自行修改
